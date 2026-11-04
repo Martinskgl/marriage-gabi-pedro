@@ -30,6 +30,11 @@ Para usar uma foto real, coloque o arquivo em `public/photos/` e preencha `src: 
 
 Coloque o arquivo em `public/video/` e preencha `video.src` no `site.ts`. A música pausa quando o vídeo começa.
 
+O vídeo atual (`public/video/nosso-video.mov`) está em HEVC (H.265), que não toca no Firefox nem em parte dos
+computadores Windows. Para funcionar em todos os navegadores, converta para MP4 H.264 (por exemplo no HandBrake,
+preset "Fast 1080p30" com "Web Optimized" marcado), salve como `public/video/nosso-video.mp4` e troque `video.src`.
+`video.posterTime` define o segundo mostrado antes do play.
+
 ### Música
 
 Coloque o arquivo em `public/music/nossa-musica.mp3` (ou altere `music.src`). Enquanto o arquivo não existir,

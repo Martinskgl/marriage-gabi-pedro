@@ -23,7 +23,6 @@ export function Hero({ lang }: P) {
             <span className="hero__amp">&amp;</span>
             <span>{couple.second}</span>
           </h1>
-          <p className="hero__tagline">{t(hero.tagline, lang)}</p>
           <p className="hero__venue">{wedding.venue}</p>
           <Countdown lang={lang} />
           <a href={site.links.rsvp} className="btn btn--solid">
@@ -48,17 +47,18 @@ export function Story({ lang }: P) {
   return (
     <section id="historia" className="section">
       <div className="container">
-        <SectionHeading eyebrow={t(story.eyebrow, lang)} title={t(story.title, lang)} intro={t(story.intro, lang)} />
+        <SectionHeading eyebrow={t(story.eyebrow, lang)} title={t(story.title, lang)} />
 
         <ol className="timeline">
           {story.timeline.map((item, i) => (
             <li key={i} className={`timeline__item ${i % 2 ? "timeline__item--right" : ""}`}>
               <div className="timeline__card" data-reveal={i % 2 ? "left" : "right"}>
-                <p className="timeline__date">{item.date}</p>
                 <h3 className="timeline__title">{t(item.title, lang)}</h3>
-                <p>{t(item.text, lang)}</p>
+                {item.text.map((p, j) => (
+                  <p key={j}>{t(p, lang)}</p>
+                ))}
               </div>
-              <div className="timeline__node" data-reveal="zoom">
+              <div className={`timeline__node ${item.stamp === site.couple.initials ? "timeline__node--mono" : ""}`} data-reveal="zoom">
                 <Image src={item.stamp} alt="" width={140} height={140} />
               </div>
               <figure className="timeline__photo" data-reveal={i % 2 ? "right" : "left"}>
@@ -67,6 +67,10 @@ export function Story({ lang }: P) {
             </li>
           ))}
         </ol>
+
+        <p className="story__closing" data-reveal>
+          {t(story.closing, lang)}
+        </p>
 
         <div className="center" data-reveal>
           <a href="#semana" className="btn">
@@ -127,7 +131,7 @@ export function VideoSection({ lang }: P) {
     <section id="video" className="section section--green">
       <div className="container container--narrow">
         <Image src="/brand/te-amo-mais-lettering.png" alt="" width={360} height={360} className="video__lettering" aria-hidden="true" data-reveal="fade" />
-        <SectionHeading eyebrow={t(video.eyebrow, lang)} title={t(video.title, lang)} intro={t(video.text, lang)} />
+        <SectionHeading eyebrow={t(video.eyebrow, lang)} title={t(video.title, lang)} />
         <div data-reveal="zoom">
           <VideoPlayer lang={lang} />
         </div>
@@ -138,31 +142,59 @@ export function VideoSection({ lang }: P) {
 
 export function Details({ lang }: P) {
   const { details } = site;
+  const { dressCode } = details;
   return (
     <section id="detalhes" className="section">
       <div className="container">
-        <SectionHeading eyebrow={t(details.eyebrow, lang)} title={t(details.title, lang)} />
+        <SectionHeading eyebrow={t(details.eyebrow, lang)} title={t(details.title, lang)} intro={t(details.date, lang)} />
         <div className="details">
-          {details.items.map((item, i) => (
-            <article key={i} className="card" data-reveal style={{ "--reveal-delay": `${i * 150}ms` } as React.CSSProperties}>
-              <p className="eyebrow">{t(item.label, lang)}</p>
-              <p className="card__time">{item.time}</p>
-              <h3 className="card__place">{item.place}</h3>
-              <p className="card__address">{t(item.address, lang)}</p>
-              <p className="card__note">{t(item.note, lang)}</p>
-              <a href={item.map} target="_blank" rel="noreferrer" className="link">
-                {t(details.mapLabel, lang)} ↗
-              </a>
-            </article>
-          ))}
+          {details.items.map((item, i) => {
+            const time = t(item.time, lang);
+            const pending = time === t(site.tbc, lang);
+            return (
+              <article key={i} className="card" data-reveal style={{ "--reveal-delay": `${i * 150}ms` } as React.CSSProperties}>
+                <p className="eyebrow">{t(item.label, lang)}</p>
+                <p className={`card__time ${pending ? "card__time--pending" : ""}`}>{time}</p>
+                <h3 className="card__place">{t(item.place, lang)}</h3>
+                {item.map && (
+                  <a href={item.map} target="_blank" rel="noreferrer" className="link">
+                    {t(details.mapLabel, lang)} ↗
+                  </a>
+                )}
+              </article>
+            );
+          })}
+
+          <article className="card card--info" data-reveal>
+            <p className="eyebrow">{t(details.guests.label, lang)}</p>
+            {details.guests.text.map((p, i) => (
+              <p key={i} className="card__note">
+                {t(p, lang)}
+              </p>
+            ))}
+          </article>
+
+          <article className="card card--info" data-reveal style={{ "--reveal-delay": "150ms" } as React.CSSProperties}>
+            <p className="eyebrow">{t(details.location.label, lang)}</p>
+            <dl className="rows">
+              {details.location.rows.map((row, i) => (
+                <div key={i}>
+                  <dt>{t(row.label, lang)}</dt>
+                  <dd>{t(row.value, lang)}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
 
           <article className="card card--wide" data-reveal>
-            <p className="eyebrow">{t(details.dressCode.label, lang)}</p>
-            <h3 className="card__place">{t(details.dressCode.value, lang)}</h3>
-            <p className="card__note">{t(details.dressCode.text, lang)}</p>
-            <p className="eyebrow eyebrow--muted">{t(details.dressCode.inspirationLabel, lang)}</p>
+            <p className="eyebrow">{t(dressCode.label, lang)}</p>
+            <h3 className="card__place">
+              <span className="card__place-label">{t(dressCode.valueLabel, lang)}</span> {t(dressCode.value, lang)}
+            </h3>
+            <p className="card__note">{t(dressCode.text, lang)}</p>
+            <p className="eyebrow eyebrow--muted">{t(dressCode.inspirationLabel, lang)}</p>
             <div className="inspiration">
-              {details.dressCode.inspiration.map((m, i) => (
+              {dressCode.inspiration.map((m, i) => (
                 <MediaFrame key={i} media={m} lang={lang} sizes="(max-width: 700px) 45vw, 20vw" />
               ))}
             </div>
@@ -202,27 +234,73 @@ export function Travel({ lang }: P) {
   );
 }
 
+export function Transport({ lang }: P) {
+  const { transport } = site;
+  return (
+    <section id="transporte" className="section">
+      <div className="container container--narrow">
+        <SectionHeading eyebrow={t(transport.eyebrow, lang)} title={t(transport.title, lang)} />
+        <dl className="rows rows--large" data-reveal>
+          {transport.items.map((item, i) => (
+            <div key={i}>
+              <dt>{t(item.label, lang)}</dt>
+              <dd>{t(item.value, lang)}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
 export function Accommodation({ lang }: P) {
   const { accommodation: acc } = site;
   return (
-    <section id="hospedagem" className="section">
+    <section id="hospedagem" className="section section--paper">
       <div className="container">
-        <SectionHeading eyebrow={t(acc.eyebrow, lang)} title={t(acc.title, lang)} intro={t(acc.intro, lang)} />
-        {acc.hotels.map((hotel, i) => (
-          <article key={i} className="hotel" data-reveal>
-            <MediaFrame media={hotel.image} lang={lang} className="hotel__media" sizes="(max-width: 900px) 90vw, 50vw" />
-            <div className="hotel__body">
-              <h3 className="hotel__name">{hotel.name}</h3>
-              <p className="eyebrow">{t(hotel.area, lang)}</p>
-              <p className="hotel__price">{t(hotel.price, lang)}</p>
-              <p>{t(hotel.note, lang)}</p>
-              <a href={hotel.link} className="btn btn--solid">
-                {t(acc.cta, lang)}
-              </a>
+        <SectionHeading eyebrow={t(acc.eyebrow, lang)} title={t(acc.title, lang)} />
+        {acc.hotels.length === 0 ? (
+          <dl className="rows rows--large rows--narrow" data-reveal>
+            <div>
+              <dt>{t(acc.label, lang)}</dt>
+              <dd>{t(site.tbc, lang)}</dd>
             </div>
-          </article>
-        ))}
-        <p className="note">{t(acc.disclaimer, lang)}</p>
+          </dl>
+        ) : (
+          acc.hotels.map((hotel, i) => (
+            <article key={i} className="hotel" data-reveal>
+              <MediaFrame media={hotel.image} lang={lang} className="hotel__media" sizes="(max-width: 900px) 90vw, 50vw" />
+              <div className="hotel__body">
+                <h3 className="hotel__name">{hotel.name}</h3>
+                <p className="eyebrow">{t(hotel.area, lang)}</p>
+                <p className="hotel__price">{t(hotel.price, lang)}</p>
+                <p>{t(hotel.note, lang)}</p>
+                {hotel.link && (
+                  <a href={hotel.link} className="btn btn--solid">
+                    {t(acc.cta, lang)}
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        )}
+      </div>
+    </section>
+  );
+}
+
+export function Message({ lang }: P) {
+  const { message } = site;
+  return (
+    <section id="recado" className="section">
+      <div className="container container--narrow">
+        <SectionHeading eyebrow={t(message.eyebrow, lang)} title={t(message.title, lang)} />
+        <div className="message" data-reveal>
+          {message.text.map((p, i) => (
+            <p key={i}>{t(p, lang)}</p>
+          ))}
+          <p className="message__signature">{t(message.signature, lang)}</p>
+        </div>
       </div>
     </section>
   );
@@ -237,7 +315,6 @@ export function Rsvp({ lang }: P) {
           <Image src={couple.monogram} alt={`${couple.names} · ${wedding.dateShort}`} width={220} height={289} className="invite__monogram" />
           <p className="eyebrow">{t(rsvp.eyebrow, lang)}</p>
           <h2 className="heading__title">{t(rsvp.title, lang)}</h2>
-          <p>{t(rsvp.text, lang)}</p>
           <a href={site.links.rsvp} className="btn btn--solid">
             {t(rsvp.cta, lang)}
           </a>
@@ -252,10 +329,16 @@ export function Gifts({ lang }: P) {
   return (
     <section id="presentes" className="section">
       <div className="container container--narrow center">
-        <SectionHeading eyebrow={t(gifts.eyebrow, lang)} title={t(gifts.title, lang)} intro={t(gifts.text, lang)} />
-        <a href={site.links.gifts} className="btn" data-reveal>
-          {t(gifts.cta, lang)}
-        </a>
+        <SectionHeading eyebrow={t(gifts.eyebrow, lang)} title={t(gifts.title, lang)} />
+        {site.links.gifts ? (
+          <a href={site.links.gifts} className="btn" data-reveal>
+            {t(gifts.cta, lang)}
+          </a>
+        ) : (
+          <p className="pending" data-reveal>
+            {t(site.tbc, lang)}
+          </p>
+        )}
       </div>
     </section>
   );
@@ -271,6 +354,7 @@ export function Footer({ lang }: P) {
         <p className="eyebrow">
           {wedding.city} · {wedding.dateShort}
         </p>
+        <p className="footer__hashtag">{couple.hashtag}</p>
         <nav className="footer__nav" aria-label="Footer">
           {site.nav.map((item) => (
             <a key={item.id} href={`#${item.id}`}>
@@ -279,8 +363,16 @@ export function Footer({ lang }: P) {
           ))}
         </nav>
         <p className="footer__note">{t(footer.note, lang)}</p>
-        <p className="footer__credits">{t(footer.credits, lang)}</p>
-        <p className="footer__credits">© 2027 {couple.names}</p>
+        <div className="footer__links">
+          {footer.credits.map((item) => (
+            <a key={item.url} href={item.url} target="_blank" rel="noreferrer">
+              {t(item.label, lang)}
+            </a>
+          ))}
+        </div>
+        <p className="footer__credits">
+          © 2027 {couple.names}. {t(footer.rights, lang)}
+        </p>
       </div>
     </footer>
   );

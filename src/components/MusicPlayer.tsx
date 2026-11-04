@@ -57,10 +57,12 @@ export function MusicPlayer({ lang }: { lang: Locale }) {
           </svg>
         )}
       </button>
-      <div className="music__info">
-        <span className="music__title">{site.music.title}</span>
-        <span className="music__artist">{site.music.artist}</span>
-      </div>
+      {(site.music.title || site.music.artist) && (
+        <div className="music__info">
+          <span className="music__title">{site.music.title}</span>
+          <span className="music__artist">{site.music.artist}</span>
+        </div>
+      )}
       <span className="music__bars" aria-hidden="true">
         <i />
         <i />

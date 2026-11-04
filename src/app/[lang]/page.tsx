@@ -10,8 +10,10 @@ import {
   Gifts,
   Hero,
   Lettering,
+  Message,
   Rsvp,
   Story,
+  Transport,
   Travel,
   VideoSection,
   Week,
@@ -34,7 +36,9 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <VideoSection lang={lang} />
         <Details lang={lang} />
         <Travel lang={lang} />
+        <Transport lang={lang} />
         <Accommodation lang={lang} />
+        <Message lang={lang} />
         <Rsvp lang={lang} />
         <Gifts lang={lang} />
       </main>
