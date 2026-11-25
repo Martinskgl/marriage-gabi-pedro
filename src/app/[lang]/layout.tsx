@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { site } from "@/data/site";
 import { isLocale, locales, t } from "@/lib/i18n";
-import { display, script, serif } from "../fonts";
+import { script, serif } from "../fonts";
 import "../globals.css";
 
 export const dynamicParams = false;
@@ -26,7 +26,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   if (!isLocale(lang)) notFound();
 
   return (
-    <html lang={lang === "pt" ? "pt-BR" : "en"} className={`${script.variable} ${display.variable} ${serif.variable}`}>
+    <html lang={lang === "pt" ? "pt-BR" : "en"} className={`${script.variable} ${serif.variable}`}>
       <body>{children}</body>
     </html>
   );

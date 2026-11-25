@@ -1,39 +1,25 @@
 import localFont from "next/font/local";
-import { Italiana, Pinyon_Script } from "next/font/google";
+import { Libre_Baskerville } from "next/font/google";
 
 /*
- * Tipografia da identidade (atelier):
- *   - Slight       → títulos e nomes (script)
- *   - TAN Garland  → palavras curtas e títulos de apoio
- *   - CMU Serif    → textos, datas e informações
+ * Tipografia definida pelos noivos:
+ *   - Slight (arquivo original)        → nomes e algumas frases ("Nos vemos dia 26 de junho!", assinatura do recado)
+ *   - Libre Baskerville Regular        → mensagem dos noivos, história, informações e todo o resto
  *
- * Slight e TAN Garland são fontes pagas. Enquanto os arquivos não chegam,
- * usamos substitutas gratuitas. Para trocar pelas originais:
- *   1. coloque os arquivos em src/fonts (ex.: slight.woff2, tan-garland.woff2)
- *   2. substitua as duas declarações abaixo por:
- *        export const script = localFont({ src: "../fonts/slight.woff2", variable: "--font-script", display: "swap" });
- *        export const display = localFont({ src: "../fonts/tan-garland.woff2", variable: "--font-display", display: "swap" });
+ * "De tantos lugares, aqui." continua como a imagem do lettering original.
  */
 
-// Substituta da Slight
-export const script = Pinyon_Script({
-  weight: "400",
-  subsets: ["latin"],
+// Slight — licença web (uso em desktop proibido)
+export const script = localFont({
+  src: "../fonts/Slight-Regular.ttf",
   variable: "--font-script",
   display: "swap",
 });
 
-// Substituta da TAN Garland
-export const display = Italiana({
+// Libre Baskerville Regular
+export const serif = Libre_Baskerville({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-// CMU Serif (arquivo original do atelier)
-export const serif = localFont({
-  src: "../fonts/cmunrm.otf",
   variable: "--font-serif",
   display: "swap",
 });
