@@ -434,6 +434,15 @@ export const site = {
     eyebrow: "07",
     title: { pt: "Lista de presentes", en: "Gift registry" },
     cta: { pt: "Ver lista de presentes", en: "See our registry" },
+    // Lista vinda do painel /admin (produtos ativos). Sem produtos: "Aguardando mais informações"
+    give: { pt: "Presentear", en: "Give this gift" },
+    name: { pt: "Nome", en: "Name" },
+    email: { pt: "E-mail", en: "E-mail" },
+    confirm: { pt: "Confirmar presente", en: "Confirm gift" },
+    cancel: { pt: "Cancelar", en: "Cancel" },
+    sending: { pt: "Enviando…", en: "Sending…" },
+    success: { pt: "Presente registrado. Obrigado!", en: "Gift registered. Thank you!" },
+    error: { pt: "Não foi possível registrar. Tente novamente.", en: "Could not register. Please try again." },
   },
 
   footer: {

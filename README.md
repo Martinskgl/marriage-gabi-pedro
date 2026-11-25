@@ -59,6 +59,33 @@ prático de mensagens. Configuração (uma vez só):
 As mensagens aparecem na aba "Mensagens" da planilha, com data, nome, mensagem e idioma. Se o script for alterado,
 publique de novo em **Implantar > Gerenciar implantações > Editar > Nova versão**, mantendo a mesma URL.
 
+### Painel /admin e lista de presentes (wedding-adm)
+
+O painel do projeto [wedding-adm](https://github.com/Martinskgl/wedding-adm) fica em `/admin` (login em `/login`).
+Nele vocês cadastram os presentes e acompanham os pedidos. Os presentes **ativos** aparecem na seção
+"Lista de presentes" do site; quando um convidado escolhe um presente e informa nome e e-mail, o pedido entra
+no painel como **Pendente** (não há pagamento online).
+
+- Arquivos do painel: `src/app/(painel)` (layout e Tailwind próprios, sem afetar o site), `src/actions`,
+  `src/services`, `src/views`, `src/components/common`, `src/components/ui`, `src/auth.config.ts`.
+- Proteção: `src/proxy.ts` bloqueia `/admin` sem login de administrador e todas as ações exigem login
+  (`src/lib/auth.ts`).
+- Banco: `prisma/schema.prisma` e `prisma/migrations`.
+
+**Configuração**
+
+1. Variáveis: copie `.env.example` para `.env.local` e preencha. Na Vercel, cadastre as mesmas variáveis
+   (`NEXTAUTH_URL` = endereço do site, por exemplo `https://marriage-gabi-pedro.vercel.app`).
+2. Tabelas (só na primeira vez ou quando houver migration nova):
+   ```bash
+   node --env-file=.env.local node_modules/prisma/build/index.js migrate deploy
+   ```
+3. Criar o administrador (a senha é pedida no terminal):
+   ```bash
+   node --env-file=.env.local scripts/criar-admin.mjs email@exemplo.com "Nome"
+   ```
+4. No painel, ao cadastrar um presente, marque **Ativo** para ele aparecer no site.
+
 ### Fontes
 
 Slight e TAN Garland são pagas; hoje usamos Pinyon Script e Italiana como substitutas.

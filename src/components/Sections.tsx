@@ -3,6 +3,7 @@ import { site, type Locale } from "@/data/site";
 import { t } from "@/lib/i18n";
 import { Countdown } from "./Countdown";
 import { GallerySlider } from "./GallerySlider";
+import { GiftList } from "./GiftList";
 import { HeroVideo } from "./HeroVideo";
 import { MediaFrame } from "./MediaFrame";
 import { MessageForm } from "./MessageForm";
@@ -365,16 +366,14 @@ export function Gifts({ lang }: P) {
   const { gifts } = site;
   return (
     <section id="presentes" className="section">
-      <div className="container container--narrow center">
+      <div className="container center">
         <SectionHeading eyebrow={t(gifts.eyebrow, lang)} title={t(gifts.title, lang)} />
         {site.links.gifts ? (
           <a href={site.links.gifts} className="btn" data-reveal>
             {t(gifts.cta, lang)}
           </a>
         ) : (
-          <p className="pending" data-reveal>
-            {t(site.pending, lang)}
-          </p>
+          <GiftList lang={lang} />
         )}
       </div>
     </section>
