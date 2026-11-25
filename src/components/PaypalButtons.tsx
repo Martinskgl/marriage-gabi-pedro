@@ -48,6 +48,11 @@ function loadSdk(lang: Locale) {
   return sdk;
 }
 
+/** Começa a carregar o PayPal antes de os botões aparecerem, para eles já estarem prontos no primeiro clique. */
+export function preloadPaypal(lang: Locale) {
+  if (paypalEnabled) loadSdk(lang).catch(() => {});
+}
+
 /** Botões do PayPal para pagar um pedido já registrado (valor definido no servidor). */
 export function PaypalButtons({
   pedido,

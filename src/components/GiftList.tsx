@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { site, type Locale } from "@/data/site";
 import { t } from "@/lib/i18n";
-import { PaypalButtons, paypalEnabled } from "./PaypalButtons";
+import { PaypalButtons, paypalEnabled, preloadPaypal } from "./PaypalButtons";
 
 type Gift = { uuid: string; name: string; description: string | null; price: number; image: string | null };
 type Status = "idle" | "sending" | "paying" | "sent" | "error" | "payError";
@@ -95,7 +95,10 @@ function GiftCard({ gift, lang }: { gift: Gift; lang: Locale }) {
           )}
         </div>
       ) : !open ? (
-        <button type="button" className="btn btn--solid" onClick={() => setOpen(true)}>
+        <button type="button" className="btn btn--solid" onClick={() => {
+            setOpen(true);
+            preloadPaypal(lang);
+          }}>
           {t(g.give, lang)}
         </button>
       ) : (

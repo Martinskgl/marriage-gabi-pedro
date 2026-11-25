@@ -29,7 +29,8 @@ export async function POST(request: Request) {
     const capture = unit?.payments?.captures?.[0];
     const paid =
       paypal.status === "COMPLETED" &&
-      unit?.custom_id === order.uuid &&
+      // Na resposta da captura o custom_id vem dentro da captura; na consulta do pedido, na unidade
+      (capture?.custom_id ?? unit?.custom_id) === order.uuid &&
       capture?.status === "COMPLETED" &&
       capture.amount?.currency_code === "BRL" &&
       capture.amount?.value === Number(order.totalPrice).toFixed(2);

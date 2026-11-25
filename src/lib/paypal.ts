@@ -25,6 +25,7 @@ async function call(path: string, init: { method: string; body?: unknown; reques
     headers: {
       Authorization: `Bearer ${await accessToken()}`,
       "Content-Type": "application/json",
+      Prefer: "return=representation",
       ...(init.requestId ? { "PayPal-Request-Id": init.requestId } : {}),
     },
     body: init.body ? JSON.stringify(init.body) : undefined,
@@ -61,7 +62,9 @@ export type PaypalOrder = {
   details?: { issue?: string }[];
   purchase_units?: {
     custom_id?: string;
-    payments?: { captures?: { status?: string; amount?: { currency_code?: string; value?: string } }[] };
+    payments?: {
+      captures?: { status?: string; custom_id?: string; amount?: { currency_code?: string; value?: string } }[];
+    };
   }[];
 };
 
