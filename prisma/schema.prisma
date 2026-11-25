@@ -43,6 +43,7 @@ model Transaction {
   quantity   Int
   totalPrice Decimal
   status     String   @default("PENDING") // PENDING | PAID | FAILED | CANCELLED
+  paypalOrderId String? @unique // pedido no PayPal (Checkout)
   createdAt  DateTime @default(now())
 
   product  Product  @relation(fields: [productId], references: [uuid])

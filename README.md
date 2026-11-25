@@ -64,7 +64,8 @@ publique de novo em **Implantar > Gerenciar implantações > Editar > Nova vers�
 O painel do projeto [wedding-adm](https://github.com/Martinskgl/wedding-adm) fica em `/admin` (login em `/login`).
 Nele vocês cadastram os presentes e acompanham os pedidos. Os presentes **ativos** aparecem na seção
 "Lista de presentes" do site; quando um convidado escolhe um presente e informa nome e e-mail, o pedido entra
-no painel como **Pendente** (não há pagamento online).
+no painel como **Pendente** e aparecem os botões do PayPal. Quando o PayPal confirma o pagamento, o pedido
+vira **Pago** sozinho.
 
 - Arquivos do painel: `src/app/(painel)` (layout e Tailwind próprios, sem afetar o site), `src/actions`,
   `src/services`, `src/views`, `src/components/common`, `src/components/ui`, `src/auth.config.ts`.
@@ -85,6 +86,14 @@ no painel como **Pendente** (não há pagamento online).
    node --env-file=.env.local scripts/criar-admin.mjs email@exemplo.com "Nome"
    ```
 4. No painel, ao cadastrar um presente, marque **Ativo** para ele aparecer no site.
+
+**PayPal**
+
+- Chaves em developer.paypal.com > Apps & Credentials: `NEXT_PUBLIC_PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` e
+  `PAYPAL_ENV` (`sandbox` para teste, `live` para valer). Sem o Client ID, a lista funciona sem pagamento.
+- O valor cobrado é sempre o do banco, em reais. O site só marca **Pago** depois de confirmar com o PayPal
+  que o valor e a moeda batem (`src/app/api/presentes/paypal`).
+- Na Vercel, depois de cadastrar ou trocar as variáveis, faça um novo deploy (o Client ID entra no build).
 
 ### Fontes
 

@@ -3,11 +3,15 @@
 import { useEffect, useState } from "react";
 import { site, type Locale } from "@/data/site";
 import { t } from "@/lib/i18n";
+import { PaypalButtons, paypalEnabled } from "./PaypalButtons";
 
 type Gift = { uuid: string; name: string; description: string | null; price: number; image: string | null };
-type Status = "idle" | "sending" | "sent" | "error";
+type Status = "idle" | "sending" | "paying" | "sent" | "error" | "payError";
 
-/** Lista de presentes cadastrados no painel /admin; cada pedido fica "Pendente" no painel. */
+/**
+ * Lista de presentes cadastrados no painel /admin. O pedido entra como "Pendente" e, com o PayPal configurado,
+ * vira "Pago" quando o pagamento é confirmado.
+ */
 export function GiftList({ lang }: { lang: Locale }) {
   const [gifts, setGifts] = useState<Gift[] | null>(null);
 
@@ -34,6 +38,7 @@ function GiftCard({ gift, lang }: { gift: Gift; lang: Locale }) {
   const g = site.gifts;
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
+  const [pedido, setPedido] = useState<string | null>(null);
   const price = new Intl.NumberFormat(lang === "pt" ? "pt-BR" : "en-US", { style: "currency", currency: "BRL" }).format(gift.price);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +59,12 @@ function GiftCard({ gift, lang }: { gift: Gift; lang: Locale }) {
       });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error);
-      setStatus("sent");
+      if (paypalEnabled && json.pedido) {
+        setPedido(json.pedido);
+        setStatus("paying");
+      } else {
+        setStatus("sent");
+      }
     } catch {
       setStatus("error");
     }
@@ -75,6 +85,15 @@ function GiftCard({ gift, lang }: { gift: Gift; lang: Locale }) {
         <p className="gift__success" role="status">
           {t(g.success, lang)}
         </p>
+      ) : pedido && (status === "paying" || status === "payError") ? (
+        <div className="gift__form">
+          <PaypalButtons pedido={pedido} lang={lang} onPaid={() => setStatus("sent")} onError={() => setStatus("payError")} />
+          {status === "payError" && (
+            <p className="guestbook__error" role="alert">
+              {t(g.payError, lang)}
+            </p>
+          )}
+        </div>
       ) : !open ? (
         <button type="button" className="btn btn--solid" onClick={() => setOpen(true)}>
           {t(g.give, lang)}

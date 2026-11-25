@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   try {
     const order = await createGiftOrder({ productId, name, email });
     if (!order) return Response.json({ ok: false, error: "presente" }, { status: 404 });
-    return Response.json({ ok: true });
+    return Response.json({ ok: true, pedido: order.uuid });
   } catch {
     return Response.json({ ok: false, error: "erro" }, { status: 500 });
   }

@@ -443,6 +443,8 @@ export const site = {
     sending: { pt: "Enviando…", en: "Sending…" },
     success: { pt: "Presente registrado. Obrigado!", en: "Gift registered. Thank you!" },
     error: { pt: "Não foi possível registrar. Tente novamente.", en: "Could not register. Please try again." },
+    // Pagamento pelo PayPal (aparece depois de confirmar nome e e-mail)
+    payError: { pt: "Pagamento não concluído. Tente novamente.", en: "Payment not completed. Please try again." },
   },
 
   footer: {

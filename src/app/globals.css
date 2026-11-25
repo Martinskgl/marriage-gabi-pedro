@@ -2096,6 +2096,14 @@ figure {
   width: 100%;
 }
 
+/* Botões do PayPal (iframe do próprio PayPal) */
+.gift__paypal {
+  width: 100%;
+  min-height: 44px;
+  position: relative;
+  z-index: 0;
+}
+
 .gift__actions {
   display: flex;
   flex-direction: column;
