@@ -50,7 +50,7 @@ export function Header({ lang }: { lang: Locale }) {
               </span>
             ))}
           </div>
-          <a href={site.links.rsvp} className="btn btn--solid btn--small header__rsvp">
+          <a href="#rsvp" className="btn btn--solid btn--small header__rsvp">
             RSVP
           </a>
           <button

@@ -1,25 +1,10 @@
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
-import { MusicPlayer } from "@/components/MusicPlayer";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import {
-  Accommodation,
-  Details,
-  Footer,
-  Gallery,
-  Gifts,
-  Hero,
-  Lettering,
-  Message,
-  Rsvp,
-  Story,
-  Transport,
-  Travel,
-  VideoSection,
-  Week,
-} from "@/components/Sections";
+import { Accommodation, Details, Footer, Gallery, Gifts, Guestbook, Hero, Intro, Message, Rsvp, Story } from "@/components/Sections";
 import { isLocale } from "@/lib/i18n";
 
+// Ocultas nesta versão (voltam quando houver informação): Week, VideoSection, Travel, Transport
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -29,21 +14,17 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <Header lang={lang} />
       <main>
         <Hero lang={lang} />
-        <Story lang={lang} />
-        <Lettering />
-        <Week lang={lang} />
-        <Gallery lang={lang} />
-        <VideoSection lang={lang} />
+        <Intro lang={lang} />
         <Details lang={lang} />
-        <Travel lang={lang} />
-        <Transport lang={lang} />
-        <Accommodation lang={lang} />
+        <Gallery lang={lang} />
         <Message lang={lang} />
-        <Rsvp lang={lang} />
+        <Guestbook lang={lang} />
+        <Accommodation lang={lang} />
+        <Story lang={lang} />
         <Gifts lang={lang} />
+        <Rsvp lang={lang} />
       </main>
       <Footer lang={lang} />
-      <MusicPlayer lang={lang} />
       <ScrollReveal />
     </>
   );

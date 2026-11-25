@@ -4,7 +4,7 @@
  * - Textos podem ser uma string única (vale para PT e EN) ou { pt, en }.
  * - Imagens sem `src` aparecem como placeholder com o tamanho indicado.
  *   Para usar uma foto real, coloque o arquivo em /public/photos e preencha `src`.
- * - Links vazios ("") escondem o botão e mostram "A confirmar".
+ * - Links vazios ("") escondem o botão e mostram "Aguardando mais informações".
  */
 
 export type Locale = "pt" | "en";
@@ -23,7 +23,7 @@ const LOREM =
 const LOREM_LONG =
   "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio.";
 
-const TBC: Text = { pt: "A confirmar", en: "To be confirmed" };
+const PENDING: Text = { pt: "Aguardando mais informações", en: "Awaiting more information" };
 const MAPS_ITANHANGA = "https://www.google.com/maps/search/?api=1&query=Itanhang%C3%A1%20Golf%20Club%2C%20Rio%20de%20Janeiro";
 
 export const site = {
@@ -52,30 +52,42 @@ export const site = {
   },
 
   links: {
-    rsvp: "#",
-    gifts: "", // A confirmar
+    rsvp: "", // Aguardando mais informações
+    gifts: "", // Aguardando mais informações
   },
 
-  tbc: TBC,
+  pending: PENDING,
 
   nav: [
-    { id: "historia", label: { pt: "História", en: "Story" } },
-    { id: "semana", label: { pt: "A semana", en: "The week" } },
-    { id: "galeria", label: { pt: "Galeria", en: "Gallery" } },
     { id: "detalhes", label: { pt: "Detalhes", en: "Details" } },
-    { id: "viagem", label: { pt: "Viagem", en: "Travel" } },
-    { id: "transporte", label: { pt: "Transporte", en: "Transportation" } },
+    { id: "galeria", label: { pt: "Galeria", en: "Gallery" } },
+    { id: "recado", label: { pt: "Recado", en: "Note" } },
     { id: "hospedagem", label: { pt: "Hospedagem", en: "Stay" } },
+    { id: "historia", label: { pt: "História", en: "Story" } },
     { id: "presentes", label: { pt: "Presentes", en: "Gifts" } },
   ],
 
   hero: {
-    image: { src: "/photos/capa.jpg", width: 900, height: 1200, alt: "Gabi & Pedro" } as Media,
+    // Vídeo P&B em loop no lugar da foto (HEVC; veja o README)
+    video: "/video/capa.mov",
+    frame: { width: 900, height: 1200 },
     cta: { pt: "Confirme sua presença", en: "RSVP" },
   },
 
+  // Abaixo das faixas verdes, antes de Detalhes
+  intro: {
+    lettering: { src: "/brand/de-tantos-lugares-green.png", alt: "De tantos lugares, aqui." },
+    tree: { src: "/brand/arvore-itanhanga.jpg", width: 1800, height: 1192, alt: { pt: "Árvore do Itanhangá", en: "The Itanhangá tree" } },
+    stamps: [
+      "/brand/stamp-ceara-rio.png",
+      "/brand/stamp-central-park-brand.png",
+      "/brand/stamp-penn-state-brand.png",
+      "/brand/stamp-miami.png",
+    ],
+  },
+
   story: {
-    eyebrow: "01",
+    eyebrow: "06",
     title: { pt: "Nossa história", en: "Our story" },
     // Os selos são da papelaria original (atelier)
     timeline: [
@@ -231,8 +243,7 @@ export const site = {
         image: { src: "/photos/historia-5-mensagem.jpg", width: 1800, height: 1200, alt: { pt: "Uma mensagem nossa", en: "A message from us" } } as Media,
       },
     ],
-    closing: { pt: "Nos vemos no dia 26 de junho! ❤️", en: "See you on June 26! ❤️" },
-    cta: { pt: "Veja a semana de eventos", en: "See the wedding week" },
+    closing: { pt: "Nos vemos dia 26 de junho!", en: "See you June 26!" },
   },
 
   // Sem conteúdo no documento: segue em lorem ipsum
@@ -250,7 +261,7 @@ export const site = {
   },
 
   gallery: {
-    eyebrow: "03",
+    eyebrow: "02",
     title: { pt: "Galeria", en: "Gallery" },
     autoplayMs: 5000,
     // Em ordem cronológica; o slide recorta as fotos na proporção 16:10
@@ -275,14 +286,14 @@ export const site = {
     title: { pt: "Em movimento", en: "In motion" },
     // Coloque o arquivo em /public/video e preencha `src` (ex.: "/video/nosso-video.mp4")
     // Original em HEVC (H.265); veja o README para converter em H.264
-    src: "/video/nosso-video.mov",
+    src: "/video/capa.mov",
     // Sem arquivo de capa: o player mostra o quadro deste segundo antes do play
     posterTime: 16,
     poster: { width: 1920, height: 1080, alt: "Gabi & Pedro" } as Media,
   },
 
   details: {
-    eyebrow: "05",
+    eyebrow: "01",
     title: { pt: "Detalhes", en: "Details" },
     date: { pt: "26 de junho de 2027 (sábado)", en: "June 26, 2027 (Saturday)" },
     items: [
@@ -290,13 +301,13 @@ export const site = {
         label: { pt: "Cerimônia", en: "Ceremony" },
         time: { pt: "16h30", en: "4:30 PM" } as Text,
         place: "Itanhangá Golf Club — Rio de Janeiro",
-        map: "", // A confirmar
+        map: "", // Aguardando mais informações
       },
       {
         label: { pt: "Recepção", en: "Reception" },
-        time: TBC,
+        time: PENDING,
         place: "Itanhangá Golf Club",
-        map: "", // A confirmar
+        map: "", // Aguardando mais informações
       },
     ],
     guests: {
@@ -316,9 +327,10 @@ export const site = {
       label: { pt: "Localização", en: "Location" },
       rows: [
         { label: { pt: "Cerimônia e recepção", en: "Ceremony and reception" }, value: "Itanhangá Golf Club — Rio de Janeiro." as Text },
-        { label: { pt: "Endereço completo e Google Maps", en: "Full address and Google Maps" }, value: TBC },
+        { label: { pt: "Endereço completo e Google Maps", en: "Full address and Google Maps" }, value: PENDING },
       ],
     },
+    divider: { src: "/brand/divisoria-renda.png", width: 1600, height: 97 },
     dressCode: {
       label: { pt: "Dress code", en: "Dress code" },
       valueLabel: { pt: "Traje:", en: "Attire:" },
@@ -351,16 +363,16 @@ export const site = {
     eyebrow: "07",
     title: { pt: "Transporte", en: "Transportation" },
     items: [
-      { label: { pt: "Transfers e vans", en: "Transfers and vans" }, value: TBC },
-      { label: { pt: "Estacionamento", en: "Parking" }, value: TBC },
+      { label: { pt: "Transfers e vans", en: "Transfers and vans" }, value: PENDING },
+      { label: { pt: "Estacionamento", en: "Parking" }, value: PENDING },
     ],
   },
 
   accommodation: {
-    eyebrow: "08",
+    eyebrow: "05",
     title: { pt: "Hospedagem", en: "Where to stay" },
     label: { pt: "Hotéis recomendados", en: "Recommended hotels" },
-    // Preencha quando os hotéis forem confirmados; vazio mostra "A confirmar"
+    // Preencha quando os hotéis forem confirmados; vazio mostra "Aguardando mais informações"
     hotels: [] as {
       name: string;
       area: Text;
@@ -373,7 +385,7 @@ export const site = {
   },
 
   message: {
-    eyebrow: "09",
+    eyebrow: "03",
     title: { pt: "Recado aos convidados", en: "A note to our guests" },
     text: [
       {
@@ -396,23 +408,33 @@ export const site = {
     signature: { pt: "Com amor, Gabi e Pedro. ❤️", en: "With love, Gabi and Pedro. ❤️" },
   },
 
+  // Mensagens dos convidados: o formulário envia para uma planilha do Google (Apps Script).
+  // Cole aqui a URL do app da Web publicado (veja o README). Vazio: o botão fica desativado.
+  guestbook: {
+    eyebrow: "04",
+    title: { pt: "Deixe sua mensagem", en: "Leave us a message" },
+    endpoint: "https://script.google.com/macros/s/AKfycbzk__nzz5XIfBZ8svSi4nbknK9q5KfH4dMCaHJRkj2yFQ5Ly18DyulXMndpOxSTmT4iQw/exec",
+    name: { pt: "Nome", en: "Name" },
+    message: { pt: "Mensagem", en: "Message" },
+    submit: { pt: "Enviar mensagem", en: "Send message" },
+    sending: { pt: "Enviando…", en: "Sending…" },
+    success: { pt: "Mensagem enviada. Obrigado!", en: "Message sent. Thank you!" },
+    error: { pt: "Não foi possível enviar. Tente novamente.", en: "Could not send. Please try again." },
+    another: { pt: "Enviar outra mensagem", en: "Send another message" },
+    maxName: 100,
+    maxMessage: 2000,
+  },
+
   rsvp: {
-    eyebrow: "10",
+    eyebrow: "08",
     title: { pt: "Confirmação", en: "RSVP" },
     cta: { pt: "Confirmar presença", en: "RSVP" },
   },
 
   gifts: {
-    eyebrow: "11",
+    eyebrow: "07",
     title: { pt: "Lista de presentes", en: "Gift registry" },
     cta: { pt: "Ver lista de presentes", en: "See our registry" },
-  },
-
-  music: {
-    // Coloque o arquivo em /public/music com este nome (ou altere o caminho)
-    src: "/music/nossa-musica.mp3",
-    title: "",
-    artist: "",
   },
 
   footer: {
@@ -436,10 +458,9 @@ export const site = {
     goTo: { pt: "Ir para a foto", en: "Go to photo" },
     menu: { pt: "Abrir menu", en: "Open menu" },
     close: { pt: "Fechar", en: "Close" },
-    play: { pt: "Tocar música", en: "Play music" },
-    pause: { pt: "Pausar música", en: "Pause music" },
+    soundOn: { pt: "Ligar o som", en: "Turn sound on" },
+    soundOff: { pt: "Desligar o som", en: "Turn sound off" },
     playVideo: { pt: "Assistir ao vídeo", en: "Play video" },
-    musicMissing: { pt: "Arquivo de música ainda não adicionado", en: "Music file not added yet" },
   },
 };
 

@@ -3,8 +3,11 @@ import { site, type Locale } from "@/data/site";
 import { t } from "@/lib/i18n";
 import { Countdown } from "./Countdown";
 import { GallerySlider } from "./GallerySlider";
+import { HeroVideo } from "./HeroVideo";
 import { MediaFrame } from "./MediaFrame";
+import { MessageForm } from "./MessageForm";
 import { SectionHeading, Stripes } from "./SectionHeading";
+import { StoryToggle } from "./StoryToggle";
 import { VideoPlayer } from "./VideoPlayer";
 
 type P = { lang: Locale };
@@ -13,6 +16,8 @@ export function Hero({ lang }: P) {
   const { hero, couple, wedding } = site;
   return (
     <section id="inicio" className="hero">
+      <div className="hero__stripe hero__stripe--left" aria-hidden="true" />
+      <div className="hero__stripe hero__stripe--right" aria-hidden="true" />
       <div className="container hero__grid">
         <div className="hero__text">
           <p className="eyebrow">
@@ -25,19 +30,18 @@ export function Hero({ lang }: P) {
           </h1>
           <p className="hero__venue">{wedding.venue}</p>
           <Countdown lang={lang} />
-          <a href={site.links.rsvp} className="btn btn--solid">
+          <a href="#rsvp" className="btn btn--solid">
             {t(hero.cta, lang)}
           </a>
         </div>
 
         <div className="hero__visual">
           <div className="arch">
-            <MediaFrame media={hero.image} lang={lang} className="arch__media" sizes="(max-width: 900px) 90vw, 40vw" priority />
+            <HeroVideo lang={lang} />
           </div>
           <Image src="/brand/stamp-ceara-rio.png" alt="" width={180} height={180} className="hero__stamp" />
         </div>
       </div>
-      <Stripes />
     </section>
   );
 }
@@ -47,8 +51,7 @@ export function Story({ lang }: P) {
   return (
     <section id="historia" className="section">
       <div className="container">
-        <SectionHeading eyebrow={t(story.eyebrow, lang)} title={t(story.title, lang)} />
-
+        <StoryToggle eyebrow={t(story.eyebrow, lang)} title={t(story.title, lang)}>
         <ol className="timeline">
           {story.timeline.map((item, i) => (
             <li key={i} className={`timeline__item ${i % 2 ? "timeline__item--right" : ""}`}>
@@ -71,22 +74,27 @@ export function Story({ lang }: P) {
         <p className="story__closing" data-reveal>
           {t(story.closing, lang)}
         </p>
-
-        <div className="center" data-reveal>
-          <a href="#semana" className="btn">
-            {t(story.cta, lang)}
-          </a>
-        </div>
+        </StoryToggle>
       </div>
     </section>
   );
 }
 
-export function Lettering() {
+/** Abaixo das faixas verdes: "De tantos lugares, aqui.", a árvore e os selos de cartão postal. */
+export function Intro({ lang }: P) {
+  const { intro } = site;
   return (
-    <div className="lettering" aria-hidden="true" data-reveal="fade">
-      <Image src="/brand/de-tantos-lugares-green.png" alt="" width={520} height={520} />
-    </div>
+    <section className="intro" aria-label={intro.lettering.alt}>
+      <div className="container">
+        <Image src={intro.lettering.src} alt={intro.lettering.alt} width={520} height={520} className="intro__lettering" data-reveal="fade" />
+        <div className="intro__scene">
+          <Image src={intro.tree.src} alt={t(intro.tree.alt, lang)} width={intro.tree.width} height={intro.tree.height} sizes="(max-width: 900px) 100vw, 900px" className="intro__tree" data-reveal="fade" />
+          {intro.stamps.map((stamp, i) => (
+            <Image key={stamp} src={stamp} alt="" width={200} height={200} className={`intro__stamp intro__stamp--${i + 1}`} data-reveal="zoom" />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -150,7 +158,7 @@ export function Details({ lang }: P) {
         <div className="details">
           {details.items.map((item, i) => {
             const time = t(item.time, lang);
-            const pending = time === t(site.tbc, lang);
+            const pending = time === t(site.pending, lang);
             return (
               <article key={i} className="card" data-reveal style={{ "--reveal-delay": `${i * 150}ms` } as React.CSSProperties}>
                 <p className="eyebrow">{t(item.label, lang)}</p>
@@ -185,6 +193,10 @@ export function Details({ lang }: P) {
               ))}
             </dl>
           </article>
+
+          <div className="lace" aria-hidden="true" data-reveal="fade">
+            <Image src={details.divider.src} alt="" width={details.divider.width} height={details.divider.height} sizes="100vw" />
+          </div>
 
           <article className="card card--wide" data-reveal>
             <p className="eyebrow">{t(dressCode.label, lang)}</p>
@@ -263,7 +275,7 @@ export function Accommodation({ lang }: P) {
           <dl className="rows rows--large rows--narrow" data-reveal>
             <div>
               <dt>{t(acc.label, lang)}</dt>
-              <dd>{t(site.tbc, lang)}</dd>
+              <dd>{t(site.pending, lang)}</dd>
             </div>
           </dl>
         ) : (
@@ -295,11 +307,29 @@ export function Message({ lang }: P) {
     <section id="recado" className="section">
       <div className="container container--narrow">
         <SectionHeading eyebrow={t(message.eyebrow, lang)} title={t(message.title, lang)} />
-        <div className="message" data-reveal>
-          {message.text.map((p, i) => (
-            <p key={i}>{t(p, lang)}</p>
-          ))}
-          <p className="message__signature">{t(message.signature, lang)}</p>
+        <div className="envelope" data-reveal>
+          <div className="envelope__back" aria-hidden="true" />
+          <div className="envelope__letter message">
+            {message.text.map((p, i) => (
+              <p key={i}>{t(p, lang)}</p>
+            ))}
+            <p className="message__signature">{t(message.signature, lang)}</p>
+          </div>
+          <div className="envelope__front" aria-hidden="true" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Guestbook({ lang }: P) {
+  const { guestbook } = site;
+  return (
+    <section id="mensagens" className="section">
+      <div className="container container--narrow">
+        <SectionHeading eyebrow={t(guestbook.eyebrow, lang)} title={t(guestbook.title, lang)} />
+        <div data-reveal>
+          <MessageForm lang={lang} />
         </div>
       </div>
     </section>
@@ -315,9 +345,13 @@ export function Rsvp({ lang }: P) {
           <Image src={couple.monogram} alt={`${couple.names} · ${wedding.dateShort}`} width={220} height={289} className="invite__monogram" />
           <p className="eyebrow">{t(rsvp.eyebrow, lang)}</p>
           <h2 className="heading__title">{t(rsvp.title, lang)}</h2>
-          <a href={site.links.rsvp} className="btn btn--solid">
-            {t(rsvp.cta, lang)}
-          </a>
+          {site.links.rsvp ? (
+            <a href={site.links.rsvp} target="_blank" rel="noreferrer" className="btn btn--solid">
+              {t(rsvp.cta, lang)}
+            </a>
+          ) : (
+            <p className="pending">{t(site.pending, lang)}</p>
+          )}
         </div>
       </div>
     </section>
@@ -336,7 +370,7 @@ export function Gifts({ lang }: P) {
           </a>
         ) : (
           <p className="pending" data-reveal>
-            {t(site.tbc, lang)}
+            {t(site.pending, lang)}
           </p>
         )}
       </div>
