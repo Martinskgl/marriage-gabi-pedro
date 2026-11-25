@@ -2028,3 +2028,12 @@ figure {
   cursor: pointer;
   font-family: var(--font-body);
 }
+
+/* Selo depois da mensagem final da Nossa história */
+.timeline__after-stamp {
+  display: block;
+  width: 140px;
+  height: auto;
+  margin-top: 24px;
+  filter: drop-shadow(0 6px 14px rgba(41, 61, 45, 0.16));
+}

@@ -60,13 +60,16 @@ export function Story({ lang }: P) {
                 {item.text.map((p, j) => (
                   <p key={j}>{t(p, lang)}</p>
                 ))}
+                {item.afterStamp && <Image src={item.afterStamp} alt="" width={160} height={160} className="timeline__after-stamp" />}
               </div>
               <div className={`timeline__node ${item.stamp === site.couple.initials ? "timeline__node--mono" : ""}`} data-reveal="zoom">
                 <Image src={item.stamp} alt="" width={140} height={140} />
               </div>
-              <figure className="timeline__photo" data-reveal={i % 2 ? "right" : "left"}>
-                <MediaFrame media={item.image} lang={lang} sizes="(max-width: 900px) 90vw, 40vw" />
-              </figure>
+              {item.image && (
+                <figure className="timeline__photo" data-reveal={i % 2 ? "right" : "left"}>
+                  <MediaFrame media={item.image} lang={lang} sizes="(max-width: 900px) 90vw, 40vw" />
+                </figure>
+              )}
             </li>
           ))}
         </ol>
