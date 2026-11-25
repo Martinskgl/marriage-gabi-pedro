@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -32,6 +32,14 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function TransactionClient({ transactions }: { transactions: Transaction[] }) {
   const [confirmDelete, setConfirmDelete] = useState<Transaction | null>(null);
+  const [deleting, startDelete] = useTransition();
+
+  // Exclui e fecha o modal; o botão fica desativado enquanto exclui para não enviar duas vezes
+  const onDelete = (formData: FormData) =>
+    startDelete(async () => {
+      await deleteTransaction(formData);
+      setConfirmDelete(null);
+    });
 
   return (
     <div>
@@ -49,14 +57,19 @@ export default function TransactionClient({ transactions }: { transactions: Tran
             <div className="flex gap-2">
               <button
                 onClick={() => setConfirmDelete(null)}
+                disabled={deleting}
                 className="flex-1 rounded-lg border border-slate-200 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
               >
                 Cancelar
               </button>
-              <form action={deleteTransaction} className="flex-1">
+              <form action={onDelete} className="flex-1">
                 <input type="hidden" name="uuid" value={confirmDelete.uuid} />
-                <button type="submit" className="w-full rounded-lg bg-red-500 py-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors">
-                  Deletar
+                <button
+                  type="submit"
+                  disabled={deleting}
+                  className="w-full rounded-lg bg-red-500 py-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors disabled:opacity-60"
+                >
+                  {deleting ? "Deletando…" : "Deletar"}
                 </button>
               </form>
             </div>

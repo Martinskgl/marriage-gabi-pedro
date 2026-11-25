@@ -18,5 +18,6 @@ export async function updateTransactionStatus(uuid: string, status: string) {
 }
 
 export async function deleteTransactionByUuid(uuid: string) {
-  return await prisma.transaction.delete({ where: { uuid } });
+  // deleteMany não dá erro se o pedido já tiver sido excluído
+  return await prisma.transaction.deleteMany({ where: { uuid } });
 }
